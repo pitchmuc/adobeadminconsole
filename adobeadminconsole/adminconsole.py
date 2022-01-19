@@ -170,3 +170,34 @@ class AdminConsole:
                 ] 
             }
         ]
+        if test:
+            parameter = {'testOnly':'true'}
+        else:
+            parameter = {}
+        path = f"/action/{self.orgId}"
+        res = self.connector.postData(self.endpoint+path,params=parameter,data=message)
+        return res
+
+    def removeUser(self,email:str=None,test:bool=False)->dict:
+        """
+        Remove users from the Admin Console, stripping it from every groups.
+        Argument:
+            email : REQUIRED : The email address of the user.
+            test : OPTIONAL : If you want to test the method
+        """
+        if email is None:
+            raise ValueError("Require an email address")
+        message = [{
+            "user": email,
+            "requestID": "action_1",
+            "do": [{
+                "remove": "all"
+            }]
+        }]
+        path = f"/action/{self.orgId}"
+        if test:
+            parameter = {'testOnly':'true'}
+        else:
+            parameter = {}
+        res = self.connector.postData(self.endpoint + path,params=parameter,data=message)
+        return res
