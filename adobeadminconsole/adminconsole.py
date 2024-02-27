@@ -201,3 +201,27 @@ class AdminConsole:
             parameter = {}
         res = self.connector.postData(self.endpoint + path,params=parameter,data=message)
         return res
+    
+    def removeUserFromOrg(self,email:str=None)->dict:
+        """
+        Remove a user from the organization.
+        Argument:
+            email : REQUIRED : The email address of the user.
+        """
+        boolean = False
+        if email is None:
+            raise ValueError("Require an email address")
+        if 'adobe.com' not in email:
+            boolean = True
+        message = [{
+            "user": email,
+            "requestID": "action_1",
+            "do": [{
+                "removeFromOrg": {
+                    "deleteAccount" : boolean
+                }
+            }]
+        }]
+        path = f"/action/{self.orgId}"
+        res = self.connector.postData(self.endpoint + path  ,data=message)
+        return res
